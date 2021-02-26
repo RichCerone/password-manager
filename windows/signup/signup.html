@@ -1,1 +1,72 @@
-<h1>Signup</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Password Manager - Signup</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap-4.6.0.min.css" />
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" />
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <h1>My Password Manager</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <button type="button" id="goBack" class="btn btn-outline-secondary"><i class="bi bi-chevron-left"></i>Go Back</button>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <h3>Signup</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Username -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="username"><i class="bi bi-person-fill"></i></span>
+                        </div>
+                        <input id="signupUsername" type="text" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Username" title="Username should be a valid email." aria-label="Username" aria-describedby="username" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Password -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="password"><i class="bi bi-eye-fill"></i></span>
+                        </div>
+                        <input id="signupPassword" type="password" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Password" title="Password must be at least 10 characters. Special characters recommended, but not required." aria-label="Password" aria-describedby="password" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Signup action -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-outline-success" id="signup" title="Signup">Signup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This can be removed when Bootstrap 5 is fully released.
+        window.jQuery = window.$ = require('./jquery/jquery-3.5.1.min.js')
+    </script>
+    <script src="../../popper/popper-1.16.1.min.js"></script>
+    <script src="../../bootstrap/js/bootstrap-4.6.0.min.js"></script>
+</body>
+</html>
