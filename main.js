@@ -1,4 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const { SqliteService } = require('./modules/sqlite/sqliteService');
+
+const dbService = new SqliteService('../../db/password-manager.db');
 
 /* We'll register undefined variables here to 
  * be used for tracking our browser windows.
@@ -49,6 +52,7 @@ function loadWindow(win, winName) {
   switch (winName) {
     case 'index':
       win.loadFile('index.html');
+      break;
     case "signup":
       win.loadFile('windows/signup/signup.html');
       break;
@@ -99,4 +103,27 @@ try {
 }
 catch (e) {
   app.quit();
+}
+
+// Redirect to login from signup.
+try {
+  ipcMain.on('redirectToIndexFromSignup', function(event, arg) {
+    mainWin = createWindow();
+    loadWindow(mainWin, 'index');
+    signupWin.close();
+  });
+}
+catch (e) {
+  app.quit();
+}
+
+// Signup user.
+try {
+  ipcMain.on('signupUser', function(event, arg) {
+    dbService.open();
+    
+  });
+}
+catch (e) {
+
 }

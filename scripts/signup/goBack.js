@@ -4,8 +4,8 @@
 
 const { ipcRenderer } = require('electron');
 
-let signupButton = document.getElementById('goBack');
-signupButton.addEventListener('click', () =>
+let goBack = document.getElementById('goBack');
+goBack.addEventListener('click', () =>
 {
     ipcRenderer.send('redirectToIndexFromSignup');
 }, false);
