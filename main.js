@@ -1,7 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { SqliteService } = require('./modules/sqlite/sqliteService');
-
-const dbService = new SqliteService('../../db/password-manager.db');
 
 /* We'll register undefined variables here to 
  * be used for tracking our browser windows.
@@ -115,15 +112,4 @@ try {
 }
 catch (e) {
   app.quit();
-}
-
-// Signup user.
-try {
-  ipcMain.on('signupUser', function(event, arg) {
-    dbService.open();
-    
-  });
-}
-catch (e) {
-
 }

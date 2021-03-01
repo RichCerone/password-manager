@@ -20,7 +20,7 @@ class SqliteService {
 
     execute(statement, params=[]) {
         try {
-            if (db === null) {
+            if (this.db === null) {
                 throw 'DB has not been initialized!';
             }
 
@@ -32,6 +32,18 @@ class SqliteService {
 
                 stmt.finalize();
             });
+        }
+        catch (e) {
+            throw e;
+        }
+        finally {
+            this.db.close();
+        }
+    }
+
+    close() {
+        try {
+            this.db.close();
         }
         catch (e) {
             throw e;
