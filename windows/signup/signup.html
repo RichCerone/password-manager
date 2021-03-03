@@ -18,6 +18,11 @@
                 <button type="button" id="goBack" class="btn btn-outline-secondary"><i class="bi bi-chevron-left"></i>Go Back</button>
             </div>
         </div>
+
+        <!-- Status message. -->
+        <div class="d-flex justify-content-center">
+            <div id="statusMessage" hidden></div>
+        </div>
         
         <div class="d-flex justify-content-center">
             <div class="row">
@@ -34,8 +39,16 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="username"><i class="bi bi-person-fill"></i></span>
                         </div>
-                        <input id="signupUsername" type="text" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Username" title="Username should be a valid email." aria-label="Username" aria-describedby="username" />
+                        <input id="signupUsername" type="text" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Username: Ex. mypassmanager@mail.com" title="Username should be a valid email." aria-label="Username" aria-describedby="username" />
                     </div>
+                </div>
+            </div>
+        </div>
+        <!-- Password label -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <label>Password must be at least 10 characters. Special characters recommended, but not required.</label>
                 </div>
             </div>
         </div>
@@ -48,6 +61,27 @@
                             <span class="input-group-text" id="password"><i class="bi bi-eye-fill"></i></span>
                         </div>
                         <input id="signupPassword" type="password" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Password" title="Password must be at least 10 characters. Special characters recommended, but not required." aria-label="Password" aria-describedby="password" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Verify Password label -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <label>Please retype your password.</label>
+                </div>
+            </div>
+        </div>
+        <!-- Verify Password -->
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="password"><i class="bi bi-eye-fill"></i></span>
+                        </div>
+                        <input id="verifySignupPassword" type="password" class="form-control" data-toggle="tooltip" data-placement="right" placeholder="Password" title="Password must be at least 10 characters. Special characters recommended, but not required." aria-label="Password" aria-describedby="password" />
                     </div>
                 </div>
             </div>

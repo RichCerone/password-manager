@@ -1,4 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const { SqliteService } = require('./modules/sqlite/sqliteService');
+const argon2 = require('argon2');
+const { Argon2Service } = require('./modules/hashing/argon2Service');
+
+// TODO: Get params from a JSON file.
+const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
+// TODO: Get path from a JSON file.
+const dbService = new SqliteService('./db/password-manager.db');
 
 /* We'll register undefined variables here to 
  * be used for tracking our browser windows.
@@ -108,6 +116,35 @@ try {
     mainWin = createWindow();
     loadWindow(mainWin, 'index');
     signupWin.close();
+  });
+}
+catch (e) {
+  app.quit();
+}
+
+// Handle user signup.
+try {
+  ipcMain.on('signupUser', async function(event, arg) {
+    const user = arg.user;
+    const encryptedPassword = await argon2Service.hash(arg.hash);
+
+    // Create user in database.
+    dbService.open();
+
+    const stmt = 'INSERT INTO Users VALUES (?, ?)';
+
+    try
+    {
+      dbService.execute(stmt, [user, encryptedPassword]);
+    }
+    catch (e)
+    {
+      event.reply('userCreated', false);
+      return;
+    }
+
+    // Let renderer know that the user was created.
+    event.reply('userCreated', true);
   });
 }
 catch (e) {
