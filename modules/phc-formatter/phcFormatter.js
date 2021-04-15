@@ -14,4 +14,4 @@
         }
     }
 
-export default { getHash }
+module.exports = { getHash }
