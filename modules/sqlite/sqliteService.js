@@ -1,4 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
+const initSqlJs = require('sql.js');
+const { SqlResult } = require('./sqlResult');
+const fs = require('fs');
 
 /**
  * Manages the SQLite database.
@@ -18,9 +20,13 @@ class SqliteService {
     /**
      * Opens a new connection to the SQLite database.
      */
-    open() {
+    async open() {
         try {
-            this.db = new sqlite3.Database(this.fileName, sqlite3.OPEN_READWRITE);
+            const fileBuffer = fs.readFileSync(this.fileName);
+            const SQL = await initSqlJs({
+                locationFile: './node_modules/sql.js/dist/sql-wasm.wasm' // TODO: download WASM to use locally.
+            });
+            this.db = new SQL.Database(fileBuffer);
         }
         catch (e) {
             throw e;
@@ -37,26 +43,35 @@ class SqliteService {
      * in the SQL statement.
      * @param {boolean} closeWhenDone Whether to close the connection after executing. 
      * Will close by default.
+     * @returns {SqlResult} the result of executing the SQL statement.
      */
     execute(statement, params=[], closeWhenDone=true) {
+        let result = new SqlResult();
         try {
             if (this.db === null) {
                 throw 'DB has not been initialized!';
             }
 
-            this.db.serialize(function() {
-                const stmt = this.prepare(statement);
-                stmt.run(params);
+            const stmt = this.db.prepare(statement);
+            stmt.bind(params);
+            stmt.step();
+            stmt.free();
 
-                stmt.finalize();
-            });
+            result = new SqlResult('User created successfully', true, '');
         }
         catch (e) {
-            throw e;
+           if (e.message.includes("UNIQUE constraint failed")) {
+            result = new SqlResult('This username already exists.', false, true, e.message);
+           }
+           else {
+               throw e;
+           }
         }
         finally {
             if (closeWhenDone) {
+                this.save();
                 this.db.close();
+                return result;
             }
         }
     }
@@ -67,6 +82,21 @@ class SqliteService {
     close() {
         try {
             this.db.close();
+        }
+        catch (e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Saves the database changes.
+     */
+    save() {
+        try {
+            const data = this.db.export();
+            const buffer = new Buffer(data);
+
+            fs.writeFileSync(this.fileName, buffer);
         }
         catch (e) {
             throw e;

@@ -23,8 +23,8 @@
   },
   "dependencies": {
     "argon2": "^0.27.1",
-    "bootstrap-icons": "^1.4.0",
+    "bootstrap-icons": "^1.4.1",
     "node-forge": "^0.10.0",
-    "sqlite3": "^5.0.2"
+    "sql.js": "^1.5.0"
   }
 }

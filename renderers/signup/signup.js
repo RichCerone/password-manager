@@ -95,14 +95,19 @@ ipcRenderer.on('userCreated', (event, arg) =>
 {
     const statusMessage = document.getElementById('statusMessage');
 
-    if (arg === true) {
+    if (arg.successful === true) {
         statusMessage.setAttribute('class', 'alert alert-thin alert-success');
         statusMessage.innerHTML = `<i role="image" aria-label="thumbs up" class="bi bi-hand-thumbs-up"></i> <strong>You've been successfully signed up! Go back to login!</strong>`
         statusMessage.hidden = false;
     }
+    else if (arg.successful === false) {
+        statusMessage.setAttribute('class', 'alert alert-thin alert-danger');
+        statusMessage.innerHTML = `<i role="image" aria-label="emoji frown" class="bi bi-emoji-frown"></i> <strong>${arg.message}</strong>`
+        statusMessage.hidden = false;
+    }
     else
     {
-        statusMessage.setAttribute('class', 'alert alert-thin alert-error');
+        statusMessage.setAttribute('class', 'alert alert-thin alert-danger');
         statusMessage.innerHTML = `<i role="image" aria-label="emoji frown" class="bi bi-emoji-frown"></i> <strong>Looks like something went wrong.</strong>`
         statusMessage.hidden = false;
     }

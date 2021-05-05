@@ -129,22 +129,21 @@ try {
     const encryptedPassword = await argon2Service.hash(arg.hash);
 
     // Create user in database.
-    dbService.open();
+    await dbService.open();
 
     const stmt = 'INSERT INTO Users VALUES (?, ?)';
 
     try
     {
-      dbService.execute(stmt, [user, encryptedPassword]);
+      const result = dbService.execute(stmt, [user, encryptedPassword]);
+      // Let renderer know that the user was created.
+      event.reply('userCreated', result);
     }
     catch (e)
     {
       event.reply('userCreated', false);
       return;
     }
-
-    // Let renderer know that the user was created.
-    event.reply('userCreated', true);
   });
 }
 catch (e) {
