@@ -59,7 +59,7 @@ function showError(message) {
  * Hides the error message on the page.
  */
 function hideError() {
-    const errorMessage = document.getElementById('hideErrorMessage');
+    const errorMessage = document.getElementById('errorMessage');
 
     errorMessage.innerHTML = '';
     errorMessage.hidden = true;
