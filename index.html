@@ -20,15 +20,23 @@
                 </div>
             </div>
         </div>
+        <!-- Error message -->
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-thin alert-danger" id="errorMessage" hidden>
+                    
+                </div>
+            </div>
+        </div>
         <!-- Username -->
         <div class="d-flex justify-content-center">
             <div class="row">
                 <div class="col-12">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="username"><i class="bi bi-person-fill"></i></span>
+                            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Username" title="Username" aria-label="Username" aria-describedby="username" />
+                        <input id="username" type="text" class="form-control" placeholder="Username" title="Username" aria-label="Username" aria-describedby="username" />
                     </div>
                 </div>
             </div>
@@ -39,9 +47,9 @@
                 <div class="col-12">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="password"><i class="bi bi-eye-fill"></i></span>
+                            <span class="input-group-text"><i class="bi bi-eye-fill"></i></span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Password" title="Password" aria-label="Password" aria-describedby="password" />
+                        <input id="password" type="password" class="form-control" placeholder="Password" title="Password" aria-label="Password" aria-describedby="password" />
                     </div>
                 </div>
             </div>
@@ -70,6 +78,6 @@
     </script>
     <script src="popper/popper-1.16.1.min.js"></script>
     <script src="bootstrap/js/bootstrap-4.6.0.min.js"></script>
-    <script src="renderers/index/signup.js"></script>
+    <script src="renderers/index/login.js"></script>
 </body>
 </html>

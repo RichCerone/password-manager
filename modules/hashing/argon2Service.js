@@ -48,6 +48,7 @@ class Argon2Service {
      * Verifies the hash is legitamate with the given text.
      * 
      * @param {string} hash The hash in PHC format.
+     * @param {string} text The given hash to test for legitamacy.
      * @returns {Promise<boolean>} true if the hash is legitamte, false if not.
      */
     async verify(hash, text) {

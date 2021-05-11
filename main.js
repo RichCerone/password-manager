@@ -11,7 +11,7 @@ const dbService = new SqliteService('./db/password-manager.db');
 /* We'll register undefined variables here to 
  * be used for tracking our browser windows.
  */
-let mainWin, signupWin;
+let mainWin, signupWin, passwordsWin;
 
 /**
  * Creates the main window for the application.
@@ -50,7 +50,8 @@ function createWindow () {
  * @param {string} winName The name of the window to load. 
  *                         Allowed values {
  *                            'index',
- *                            'signup'
+ *                            'signup',
+ *                            'passwords'
  *                         }
  */
 function loadWindow(win, winName) {
@@ -58,8 +59,11 @@ function loadWindow(win, winName) {
     case 'index':
       win.loadFile('index.html');
       break;
-    case "signup":
+    case 'signup':
       win.loadFile('windows/signup/signup.html');
+      break;
+    case 'passwords':
+      win.loadFile('windows/passwords/passwords.html');
       break;
     default:
       throw "Window name does not exist.";
@@ -122,6 +126,18 @@ catch (e) {
   app.quit();
 }
 
+// Redirect to passwords from from login.
+try {
+  ipcMain.on('redirectPasswords', function(event, arg) {
+    passwordsWin = createWindow();
+    loadWindow(passwordsWin, 'passwords');
+    mainWin.close();
+  });
+}
+catch (e) {
+  app.quit();
+}
+
 // Handle user signup.
 try {
   ipcMain.on('signupUser', async function(event, arg) {
@@ -145,6 +161,36 @@ try {
       return;
     }
   });
+}
+catch (e) {
+  app.quit();
+}
+
+// Handle login verification.
+try {
+  ipcMain.on('verifyLogin', async function (event, arg) {
+    const user = arg.user;
+    const encryptedPassword = await argon2Service.hash(arg.hash);
+
+    // Get user password in database.
+    await dbService.open();
+
+    const stmt = 'SELECT passwordHash FROM Users WHERE userName=(?)';
+
+    try {
+      const result = dbService.execute(stmt, [user], true, true);
+      if (argon2Service.verify(result.result, encryptedPassword)) {
+        // Let renderer know that the login was verified.
+        event.reply('loginVerified', true);
+      }
+      else {
+        event.reply('loginVerified', false);
+      }
+    }
+    catch (e) {
+      event.reply('loginVerified', 'An unexpected error occurred');
+    }
+  })
 }
 catch (e) {
   app.quit();

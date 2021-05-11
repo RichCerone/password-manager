@@ -24,7 +24,7 @@ class SqliteService {
         try {
             const fileBuffer = fs.readFileSync(this.fileName);
             const SQL = await initSqlJs({
-                locationFile: './node_modules/sql.js/dist/sql-wasm.wasm' // TODO: download WASM to use locally.
+                locationFile: './node_modules/sql.js/dist/sql-wasm.wasm'
             });
             this.db = new SQL.Database(fileBuffer);
         }
@@ -35,7 +35,7 @@ class SqliteService {
 
     /**
      * Executes a SQL statement. The connection will close after
-     *  execution unless specified.
+     * execution unless specified.
      * 
      * @param {string} statement The SQL statement to execute.
      * @param {*} params Any parameters indicated by '?' in the SQL string.
@@ -43,33 +43,47 @@ class SqliteService {
      * in the SQL statement.
      * @param {boolean} closeWhenDone Whether to close the connection after executing. 
      * Will close by default.
+     * @param {boolean} returnResultAsObj Whether to return the result of the query as an object.
      * @returns {SqlResult} the result of executing the SQL statement.
      */
-    execute(statement, params=[], closeWhenDone=true) {
+    execute(statement, params=[], closeWhenDone=true, returnResultAsObj=false) {
         let result = new SqlResult();
+        let stmt = null;
+
         try {
             if (this.db === null) {
                 throw 'DB has not been initialized!';
             }
 
-            const stmt = this.db.prepare(statement);
+            stmt = this.db.prepare(statement);
             stmt.bind(params);
-            stmt.step();
-            stmt.free();
+            
+            let res = null;
+            if (returnResultAsObj) {
+                res = stmt.getAsObject(params);
+            }
+            else {
+                res = stmt.step();
+            }
 
-            result = new SqlResult('User created successfully', true, '');
+            result = new SqlResult('', true, false, res, '');
         }
         catch (e) {
-           if (e.message.includes("UNIQUE constraint failed")) {
-            result = new SqlResult('This username already exists.', false, true, e.message);
-           }
-           else {
-               throw e;
-           }
+            if (e.message.includes("UNIQUE constraint failed")) {
+                result = new SqlResult('This entry already exists.', false, true, null, e.message);
+            }
+            else {
+                throw e;
+            }
         }
         finally {
-            if (closeWhenDone) {
-                this.save();
+            this.save();
+
+            if (stmt !== null) {
+                stmt.free();
+            }
+            
+            if (closeWhenDone && this.db !== null) {
                 this.db.close();
                 return result;
             }
@@ -94,7 +108,7 @@ class SqliteService {
     save() {
         try {
             const data = this.db.export();
-            const buffer = new Buffer(data);
+            const buffer = new Buffer.from(data);
 
             fs.writeFileSync(this.fileName, buffer);
         }
