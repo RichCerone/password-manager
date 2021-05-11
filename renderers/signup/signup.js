@@ -9,10 +9,12 @@ const phcFormatter = require('../../modules/phc-formatter/phcFormatter');
 // TODO: Get params from a JSON file.
 const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
 
-// Enable tooltips (Bootstrap 4.x)
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-});  
+// Enable tooltips (Bootstrap 5.x)
+const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+ 
 
 // Add listner to go back button.
 const goBack = document.getElementById('goBack');
