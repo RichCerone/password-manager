@@ -1,13 +1,7 @@
 /****************************************************
  * This helps signup the user.
  ****************************************************/
-const { ipcRenderer } = require('electron');
-const argon2 = require('argon2');
-const { Argon2Service } = require('../../modules/hashing/argon2Service');
-const phcFormatter = require('../../modules/phc-formatter/phcFormatter');
-
-// TODO: Get params from a JSON file.
-const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
+'use strict';
 
 // Enable tooltips (Bootstrap 5.x)
 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -20,7 +14,7 @@ tooltipTriggerList.map(function (tooltipTriggerEl) {
 const goBack = document.getElementById('goBack');
 goBack.addEventListener('click', () =>
 {
-    ipcRenderer.send('redirectToIndexFromSignup');
+    window.api.send('redirectToIndexFromSignup');
 }, false);
 
 // Add listeners on password inputs.
@@ -85,15 +79,14 @@ signupButton.addEventListener('click', async () =>
     const user = document.getElementById('signupUsername').value;
     const password = document.getElementById('signupPassword').value;
 
-    // Encrypt password and get hash.
-    const encryptedPassword = await argon2Service.hash(password);
-    const hash = phcFormatter.getHash(encryptedPassword);
+    // Hash password.
+    const hash = window.api.shaHash('sha512', password);
 
-    ipcRenderer.send('signupUser', {user: user, hash: hash});
+    window.api.send('signupUser', {user: user, hash: hash});
 }, false);
 
 // Add listener for when user is created.
-ipcRenderer.on('userCreated', (event, arg) => 
+window.api.on('userCreated', (arg) => 
 {
     const statusMessage = document.getElementById('statusMessage');
 

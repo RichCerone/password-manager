@@ -1,13 +1,7 @@
 /****************************************************
  * This helps process the user login.
  ****************************************************/
-const { ipcRenderer } = require('electron');
-const argon2 = require('argon2');
-const { Argon2Service } = require('./modules/hashing/argon2Service');
-const phcFormatter = require('./modules/phc-formatter/phcFormatter');
-
-// TODO: Get params from a JSON file.
-const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
+'use strict'
 
 // Add listener to login button.
 const login = document.getElementById('login');
@@ -21,23 +15,21 @@ login.addEventListener('click', async () =>
     // Get password.
     const password = document.getElementById('password').value
 
-    // Hash password and get hash.
-    const encryptedPassword = await argon2Service.hash(password);
-    const hash = phcFormatter.getHash(encryptedPassword);
+    // Hash password.
+    const hash = window.api.shaHash('sha512', password);
 
     // Compare with hash in db.
-    ipcRenderer.send('verifyLogin', {user: username, hash: hash});
+    window.api.send('verifyLogin', {user: username, hash: hash});
 });
 
 // Add listener for when verify login calls back.
-ipcRenderer.on('loginVerified', (event, arg) => {
+window.api.on('loginVerified', (arg) => {
+    login.disabled = false;
+
     if (arg === true) {
         hideError();
 
-        ipcRenderer.send('redirectPasswords');
-    }
-    else if (arg === false) {
-        showError("The username and password is not valid.");
+        window.api.send('redirectPasswords');
     }
     else {
         showError(arg);
@@ -64,13 +56,3 @@ function hideError() {
     errorMessage.innerHTML = '';
     errorMessage.hidden = true;
 }
-
-/****************************************************
- * This helps redirect to render the signup page.
- ****************************************************/
-
- let signupButton = document.getElementById('signup');
- signupButton.addEventListener('click', () =>
- {
-     ipcRenderer.send('redirectSignup');
- }, false);

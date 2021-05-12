@@ -12,7 +12,7 @@ class Argon2Service {
      * @param {number} memoryCost How much memory to use in MB.
      * @param {number} hashLength Length of the hash result.
      */
-    constructor(type = argon2.argon2i, memoryCost = 64, hashLength = 50) {
+    constructor(type = argon2.argon2id, memoryCost = 64, hashLength = 50) {
         switch(type) {
             case argon2.argon2d:
                 this.type = type;
@@ -48,7 +48,7 @@ class Argon2Service {
      * Verifies the hash is legitamate with the given text.
      * 
      * @param {string} hash The hash in PHC format.
-     * @param {string} text The given hash to test for legitamacy.
+     * @param {string} text The plain text.
      * @returns {Promise<boolean>} true if the hash is legitamte, false if not.
      */
     async verify(hash, text) {
