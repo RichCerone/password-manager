@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path')
 const { SqliteService } = require('./modules/sqlite/SqliteService');
 const argon2 = require('argon2');
 const { Argon2Service } = require('./modules/hashing/Argon2Service');
@@ -21,7 +22,7 @@ function createMainWindow() {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
@@ -37,7 +38,7 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 }
@@ -142,7 +143,7 @@ catch (e) {
 try {
   ipcMain.on('signupUser', async function(event, arg) {
     const user = arg.user;
-    const encryptedPassword = await argon2Service.hash(arg.hash);
+    const hash = arg.hash;
 
     // Create user in database.
     await dbService.open();
@@ -151,7 +152,7 @@ try {
 
     try
     {
-      const result = dbService.execute(stmt, [user, encryptedPassword]);
+      const result = dbService.execute(stmt, [user, hash]);
       // Let renderer know that the user was created.
       event.reply('userCreated', result);
     }
@@ -170,7 +171,7 @@ catch (e) {
 try {
   ipcMain.on('verifyLogin', async function (event, arg) {
     const user = arg.user;
-    const encryptedPassword = await argon2Service.hash(arg.hash);
+    const hash = arg.hash;
 
     // Get user password in database.
     await dbService.open();
@@ -179,12 +180,15 @@ try {
 
     try {
       const result = dbService.execute(stmt, [user], true, true);
-      if (argon2Service.verify(result.result, encryptedPassword)) {
+      if (result.result.passwordHash === undefined) {
+        event.reply('loginVerified', 'The username could not be found.');
+      }
+      else if (await argon2Service.verify(result.result.passwordHash, hash)) {
         // Let renderer know that the login was verified.
         event.reply('loginVerified', true);
       }
       else {
-        event.reply('loginVerified', false);
+        event.reply('loginVerified', 'The password entered is invalid.');
       }
     }
     catch (e) {

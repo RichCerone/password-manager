@@ -1,13 +1,7 @@
 /****************************************************
  * This helps process the user login.
  ****************************************************/
-'use strict';
-
-const { ipcRenderer } = require('electron');
-const { ShaService } = require('./modules/hashing/ShaService');
-
-// TODO: Get params from a JSON file.
-const shaService = new ShaService('sha512');
+'use strict'
 
 // Add listener to login button.
 const login = document.getElementById('login');
@@ -22,21 +16,20 @@ login.addEventListener('click', async () =>
     const password = document.getElementById('password').value
 
     // Hash password.
-    const hash = shaService.hash(password);
+    const hash = window.api.shaHash('sha512', password);
 
     // Compare with hash in db.
-    ipcRenderer.send('verifyLogin', {user: username, hash: hash});
+    window.api.send('verifyLogin', {user: username, hash: hash});
 });
 
 // Add listener for when verify login calls back.
-ipcRenderer.on('loginVerified', (event, arg) => {
+window.api.on('loginVerified', (arg) => {
+    login.disabled = false;
+
     if (arg === true) {
         hideError();
 
-        ipcRenderer.send('redirectPasswords');
-    }
-    else if (arg === false) {
-        showError("The username and password is not valid.");
+        window.api.send('redirectPasswords');
     }
     else {
         showError(arg);

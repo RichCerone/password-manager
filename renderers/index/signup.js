@@ -1,11 +1,10 @@
 /****************************************************
  * This helps redirect to render the signup page.
  ****************************************************/
-'use strict';
-const { ipcRenderer } = require('electron');
-
+'use strict'
+ 
  let signupButton = document.getElementById('signup');
  signupButton.addEventListener('click', () =>
  {
-     ipcRenderer.send('redirectSignup');
+     window.api.send('redirectSignup');
  }, false);

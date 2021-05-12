@@ -3,12 +3,6 @@
  ****************************************************/
 'use strict';
 
-const { ipcRenderer } = require('electron');
-const { ShaService } = require('../../modules/hashing/ShaService');
-
-// TODO: Get params from a JSON file.
-const shaService = new ShaService('sha512');
-
 // Enable tooltips (Bootstrap 5.x)
 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -20,7 +14,7 @@ tooltipTriggerList.map(function (tooltipTriggerEl) {
 const goBack = document.getElementById('goBack');
 goBack.addEventListener('click', () =>
 {
-    ipcRenderer.send('redirectToIndexFromSignup');
+    window.api.send('redirectToIndexFromSignup');
 }, false);
 
 // Add listeners on password inputs.
@@ -86,13 +80,13 @@ signupButton.addEventListener('click', async () =>
     const password = document.getElementById('signupPassword').value;
 
     // Hash password.
-    const hash = shaService.hash(password);
+    const hash = window.api.shaHash('sha512', password);
 
-    ipcRenderer.send('signupUser', {user: user, hash: hash});
+    window.api.send('signupUser', {user: user, hash: hash});
 }, false);
 
 // Add listener for when user is created.
-ipcRenderer.on('userCreated', (event, arg) => 
+window.api.on('userCreated', (arg) => 
 {
     const statusMessage = document.getElementById('statusMessage');
 
