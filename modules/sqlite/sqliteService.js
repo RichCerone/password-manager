@@ -1,5 +1,5 @@
 const initSqlJs = require('sql.js');
-const { SqlResult } = require('./sqlResult');
+const { SqlResult } = require('./SqlResult');
 const fs = require('fs');
 
 /**

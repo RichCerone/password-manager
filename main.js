@@ -1,10 +1,10 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { SqliteService } = require('./modules/sqlite/sqliteService');
+const { SqliteService } = require('./modules/sqlite/SqliteService');
 const argon2 = require('argon2');
-const { Argon2Service } = require('./modules/hashing/argon2Service');
+const { Argon2Service } = require('./modules/hashing/Argon2Service');
 
 // TODO: Get params from a JSON file.
-const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
+const argon2Service = new Argon2Service(argon2.argon2id, 2 ** 16, 50);
 // TODO: Get path from a JSON file.
 const dbService = new SqliteService('./db/password-manager.db');
 

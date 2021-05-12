@@ -1,13 +1,13 @@
 /****************************************************
  * This helps signup the user.
  ****************************************************/
+'use strict';
+
 const { ipcRenderer } = require('electron');
-const argon2 = require('argon2');
-const { Argon2Service } = require('../../modules/hashing/argon2Service');
-const phcFormatter = require('../../modules/phc-formatter/phcFormatter');
+const { ShaService } = require('../../modules/hashing/ShaService');
 
 // TODO: Get params from a JSON file.
-const argon2Service = new Argon2Service(argon2.argon2i, 2 ** 16, 50);
+const shaService = new ShaService('sha512');
 
 // Enable tooltips (Bootstrap 5.x)
 const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -85,9 +85,8 @@ signupButton.addEventListener('click', async () =>
     const user = document.getElementById('signupUsername').value;
     const password = document.getElementById('signupPassword').value;
 
-    // Encrypt password and get hash.
-    const encryptedPassword = await argon2Service.hash(password);
-    const hash = phcFormatter.getHash(encryptedPassword);
+    // Hash password.
+    const hash = shaService.hash(password);
 
     ipcRenderer.send('signupUser', {user: user, hash: hash});
 }, false);
