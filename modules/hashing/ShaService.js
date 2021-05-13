@@ -5,23 +5,24 @@ const forge = require('node-forge');
  */
 class ShaService {
     /**
-     * Creates a new ShaService.
-     *
-     *  @param {string} mode The SHA algorthim to use. SHA512 used by default. 
+     * Performs SHA hashing.
+     * 
+     * @constructs ShaService
+     * @param {string} mode The SHA algorthim to use. SHA512 used by default. 
      *                       Supported types: ['sha512', 'sha384', 'sha256']
      */
     constructor(mode = 'sha512') {
-        switch (mode) {
+        switch (mode.toLowerCase()) {
             case 'sha512':
-                this.mode = mode;
+                this.mode = 'sha512';
                 break;
             
             case 'sha384':
-                this.mode = mode;
+                this.mode = 'sha384';
                 break;
 
             case 'sha256':
-                this.mode = mode;
+                this.mode = 'sha256';
                 break;
 
             default:
@@ -36,17 +37,17 @@ class ShaService {
      *                      Supported types: ['sha512', 'sha384', 'sha256']
      */
     setMode(mode) {
-        switch (mode) {
+        switch (mode.toLowerCase()) {
             case 'sha512':
-                this.mode = mode;
+                this.mode = 'sha512';
                 break;
 
             case 'sha384':
-                this.mode = mode;
+                this.mode = 'sha384';
                 break;
 
             case 'sha256':
-                this.mode = mode;
+                this.mode = 'sha256';
                 break;
 
             default:

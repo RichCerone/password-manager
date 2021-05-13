@@ -17,8 +17,11 @@ window.addEventListener('DOMContentLoaded', () => {
 // Define needed libraries for UI.
 const { contextBridge, ipcRenderer } = require('electron');
 const { ShaService } = require('./modules/hashing/ShaService');
+const { AesService } = require('./modules/hashing/AesService');
 
+// Init services.
 const shaService = new ShaService();
+const aesService = new AesService('./aes/aes-store.json', 32, 'AES-GCM');
 
 // Define a list of allowed channels.
 const sendChannels = [
