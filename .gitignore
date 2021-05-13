@@ -74,3 +74,7 @@ patches/mtime-cache.json
 /db
 .db
 .db-journal
+
+#aes
+/aes
+aes-store.json
