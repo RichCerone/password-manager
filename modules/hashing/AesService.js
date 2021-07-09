@@ -125,7 +125,12 @@ class AesService {
         }
     }
 
-
+    /**
+     * Encrypts the given text using AES.
+     * 
+     * @param {string} text The text to be encrypted.
+     * @returns Hexadecimal string representation of the encrypted data.
+     */
     encrypt(text) {
         try {
             if (this.mode === 'AES-GCM') {
@@ -156,9 +161,11 @@ class AesService {
     }
 
     /**
+     * Decrypts the given encrypted data.
      * 
-     * @param {*} encryptedData 
-     * @returns 
+     * @param {string} encryptedData The hexadecimal string representation of the
+     * encrypted data.
+     * @returns UTF-8 string output of the plain text.
      */
     decrypt(encryptedData) {
         try {

@@ -28,6 +28,10 @@ window.api.on('loginVerified', (arg) => {
 
     if (arg === true) {
         hideError();
+        
+        // Set user in session.
+        const username = document.getElementById('username').value;
+        sessionStorage.setItem('user', username);
 
         window.api.send('redirectPasswords');
     }

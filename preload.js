@@ -29,12 +29,14 @@ const sendChannels = [
     'verifyLogin',
     'redirectToIndexFromSignup',
     'signupUser',
-    'redirectPasswords'
+    'redirectPasswords',
+    'getAllPasswords'
 ]
 
 const onChannels = [
     'loginVerified',
-    'userCreated'
+    'userCreated',
+    'allPasswordsRetrieved'
 ]
 
 // Exposes public API for select processes.
@@ -60,6 +62,21 @@ contextBridge.exposeInMainWorld(
         shaHash: (mode, text) => {
             shaService.setMode(mode);
             return shaService.hash(text);
+        },
+        getAesStore: () =>{
+            aesService.getAesStore();
+        },
+        writeToAesStore: () => {
+            aesService.writeToAesStore();
+        },
+        generateAesParameters: () => {
+            aesService.generateAesParameters(aesService.byteSize);
+        },
+        encrypt: (text) => {
+            return aesService.encrypt(text);
+        },
+        decrypt: (encryptedData) => {
+            return aesService.decrypt(encryptedData);
         }
     }
 );
