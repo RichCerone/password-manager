@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path')
+
 const { SqliteService } = require('./modules/sqlite/SqliteService');
+
 const argon2 = require('argon2');
 const { Argon2Service } = require('./modules/hashing/Argon2Service');
 
@@ -194,7 +196,35 @@ try {
     catch (e) {
       event.reply('loginVerified', 'An unexpected error occurred');
     }
-  })
+  });
+}
+catch (e) {
+  app.quit();
+}
+
+// Handles getting passwords.
+try {
+  ipcMain.on('getAllPasswords', async function(event, arg) {
+    const user = arg.user;
+
+    // Get all passwords for the given user.
+    await dbService.open();
+
+    const stmt = 'SELECT * FROM Passwords WHERE appUser=(?)';
+
+    try {
+      const result = dbService.execute(stmt, [user], true, true);
+      if (result.successful === true) {
+        event.reply('allPasswordsRetrieved', { result: result.result });
+      }
+      else {
+        event.reply('allPasswordsRetrieved', 'An error occurred getting your passwords.');
+      }
+    }
+    catch (e) {
+      event.reply('allPasswordsRetrieved', 'An unexpected error occurred.');
+    }
+  });
 }
 catch (e) {
   app.quit();

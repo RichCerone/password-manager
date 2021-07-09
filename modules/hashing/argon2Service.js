@@ -45,7 +45,7 @@ class Argon2Service {
     }
 
     /**
-     * Verifies the hash is legitamate with the given text.
+     * Verifies the hash is legitimate with the given text.
      * 
      * @param {string} hash The hash in PHC format.
      * @param {string} text The plain text.
