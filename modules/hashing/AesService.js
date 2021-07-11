@@ -181,8 +181,8 @@ class AesService {
 
                 const result = decipher.finish();
                 
-                if(result) {
-                    return decipher.output.toString();
+                if (result) {
+                    return decipher.output.toString('utf8');
                 }
                 else {
                     throw 'Could not decrypt the given data with the key.'
